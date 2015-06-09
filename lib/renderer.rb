@@ -21,9 +21,12 @@ class Renderer
 		split_chunks = chunk.separate_by_new_lines(doc)
 		phsplitter = ParagraphHeaderSplitter.new
 		assigned_chunks = phsplitter.splitter(split_chunks)
-		strong = Strong.new
-		strong_chunks = strong.render(assigned_chunks)
-		print strong_chunks
+		list = Lists.new
+		list_chunks = list.render(assigned_chunks)
+		print list_chunks
+		# strong = Strong.new
+		# strong_chunks = strong.render(list_chunks)
+	
 	end
 end
 
@@ -54,7 +57,7 @@ class ParagraphHeaderSplitter
 				"<h5>#{string}</h5>"
 			elsif string[0..3] == "####"
 				string.delete!('#')
-				"<h34>#{string}</h4>"
+				"<h4>#{string}</h4>"
 			elsif string[0..2] == "###"
 				string.delete!('#')
 				"<h3>#{string}</h3>"
@@ -78,6 +81,19 @@ class Strong
 
 	end
 
+end
+
+class Lists
+
+	def render(assigned_chunks)
+		assigned_chunks.map do |string|
+			if string.include?("\n*") == true
+				string.gsub("*", '<li>')
+			else
+				string
+			end
+		end
+	end
 end
 
 class Strikethrough
