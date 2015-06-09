@@ -20,8 +20,10 @@ class Renderer
 		chunk = ChunkMaker.new
 		split_chunks = chunk.separate_by_new_lines(doc)
 		phsplitter = ParagraphHeaderSplitter.new
-		test = phsplitter.splitter(split_chunks)
-		print test
+		assigned_chunks = phsplitter.splitter(split_chunks)
+		strong = Strong.new
+		strong_chunks = strong.render(assigned_chunks)
+		print strong_chunks
 	end
 end
 
@@ -47,7 +49,13 @@ class ParagraphHeaderSplitter
 
 	def splitter(split_chunks)
 		split_chunks.map do |string|
-			if string[0..2] == "###"
+			if string[0..4] == "#####"
+				string.delete!('#')
+				"<h5>#{string}</h5>"
+			elsif string[0..3] == "####"
+				string.delete!('#')
+				"<h34>#{string}</h4>"
+			elsif string[0..2] == "###"
 				string.delete!('#')
 				"<h3>#{string}</h3>"
 			elsif string[0..1] == "##"
@@ -60,6 +68,14 @@ class ParagraphHeaderSplitter
 				"<p>#{string}</p>"
 			end
 		end
+	end
+
+end
+
+class Strong
+
+	def render(assigned_chunks)
+
 	end
 
 end
