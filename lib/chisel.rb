@@ -8,3 +8,7 @@ require './renderer'
 doc = File.read(ARGV[0])
 
 renderer = Renderer.new.render(doc)
+
+rendered = File.write(ARGV[1], renderer)
+rendered
+puts "Transformed \'my_input.markdown\' to \'my_output.html\'"

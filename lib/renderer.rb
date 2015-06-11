@@ -6,7 +6,7 @@
 #html formatted text lines to output writer
 #output writer combines all lines into one string.
 #pass string back to chisel.rb
-
+require 'pry'
 
 class Renderer
 
@@ -21,12 +21,10 @@ class Renderer
 		split_chunks = chunk.separate_by_new_lines(doc)
 		phsplitter = ParagraphHeaderSplitter.new
 		assigned_chunks = phsplitter.splitter(split_chunks)
-		list = Lists.new
-		list_chunks = list.render(assigned_chunks)
-		print list_chunks
-		# strong = Strong.new
-		# strong_chunks = strong.render(list_chunks)
-	
+		lists = Lists.new
+		listed_chunks = lists.render(assigned_chunks)
+		strong = Strong.new.render(listed_chunks)
+		strong.join("\n")
 	end
 end
 
@@ -77,8 +75,19 @@ end
 
 class Strong
 
-	def render(assigned_chunks)
-
+	def render(listed_chunks)
+		listed_chunks.each do |string|
+			while string.include?("**") == true
+				string.sub!("**", "<strong>")
+				string.sub!("**", "</strong>")
+			break
+			end
+			while string.include?("*") == true
+				string.sub!("*", "<em>")
+				string.sub!("*", "</em>")
+			break
+			end
+		end
 	end
 
 end
@@ -86,13 +95,34 @@ end
 class Lists
 
 	def render(assigned_chunks)
-		assigned_chunks.map do |string|
-			if string.include?("\n*") == true
-				string.gsub("*", '<li>')
-			else
-				string
+			listed_chunks = assigned_chunks.map do |string|
+				if string.include?("* ") && string.include?(":")
+					list_items = string.split("\n")
+					strings = list_items.map do |chunk|
+						"#{chunk.sub!("* ", "<li>")} </li>"
+					end
+					"<ul>\n#{strings.join("\n")}\n</ul>"
+				else
+					string
+				end
 			end
-		end
+
+			listed_chunks = listed_chunks.map do |string|
+				if string.include?("1.") && string.include?(":")
+					list_items = string.split("\n")
+					strings = list_items.map do |chunk|
+						"#{chunk.sub!("1.", "<li>")} </li>"
+						"#{chunk.sub!("2.", "<li>")} </li>"
+						"#{chunk.sub!("3.", "<li>")} </li>"
+						"#{chunk.sub!("4.", "<li>")} </li>"
+						"#{chunk.sub!("5.", "<li>")} </li>"
+					end
+					"<ol>\n#{strings.join("\n")}\n</ol>"
+				else
+					string
+				end
+			end
+	return listed_chunks
 	end
 end
 

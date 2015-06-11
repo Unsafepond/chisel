@@ -7,8 +7,14 @@
 ####Header **TEST** 4
 
 this is:
-*a
-*list
-*test
+* a
+* list
+* test
 
 paragraph test
+
+this is:
+1.a
+2.list
+3.test
+4.too
