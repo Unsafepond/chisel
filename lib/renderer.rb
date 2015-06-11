@@ -24,7 +24,8 @@ class Renderer
 		lists = Lists.new
 		listed_chunks = lists.render(assigned_chunks)
 		strong = Strong.new.render(listed_chunks)
-		strong.join("\n")
+		links = Links.new.render(listed_chunks).join("\n")
+		links
 	end
 end
 
@@ -77,12 +78,12 @@ class Strong
 
 	def render(listed_chunks)
 		listed_chunks.each do |string|
-			while string.include?("**") == true
+			while string.include?("**")
 				string.sub!("**", "<strong>")
 				string.sub!("**", "</strong>")
 			break
 			end
-			while string.include?("*") == true
+			while string.include?("*")
 				string.sub!("*", "<em>")
 				string.sub!("*", "</em>")
 			break
@@ -108,7 +109,7 @@ class Lists
 			end
 
 			listed_chunks = listed_chunks.map do |string|
-				if string.include?("1.") && string.include?(":")
+				if string.include?("1.") 
 					list_items = string.split("\n")
 					strings = list_items.map do |chunk|
 						"#{chunk.sub!("1.", "<li>")} </li>"
@@ -126,10 +127,21 @@ class Lists
 	end
 end
 
-class Strikethrough
-
-	def render(input)
-
+class Links
+	def render(strong)
+		strong.map do |string|
+			if string.include?("http://")
+				string.split(" ").each do |chunk|
+					while chunk.include?("http://")
+						chunk = "<a href =#{chunk.sub!("(", "\"").sub(")", "\"")}>turing.io</a>"
+						break
+					end
+				end
+			else
+				string
+			end
+		end
 	end
-
 end
+
+

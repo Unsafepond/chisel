@@ -11,4 +11,4 @@ renderer = Renderer.new.render(doc)
 
 rendered = File.write(ARGV[1], renderer)
 rendered
-puts "Transformed \'my_input.markdown\' to \'my_output.html\'"
+puts "Transformed \'my_input.markdown\' into \'my_output.html\'"
